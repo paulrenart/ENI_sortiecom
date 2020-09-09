@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SortiesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,16 +40,6 @@ class Sorties
     private $description;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $organisateur;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $lieux_id;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $photo;
@@ -56,6 +48,34 @@ class Sorties
      * @ORM\Column(type="integer")
      */
     private $etat;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Inscriptions::class, mappedBy="sorties_id")
+     */
+    private $inscriptions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $organisateur_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Lieux::class, inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $lieux_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus_id;
+
+    public function __construct()
+    {
+        $this->inscriptions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -110,30 +130,6 @@ class Sorties
         return $this;
     }
 
-    public function getOrganisateur(): ?int
-    {
-        return $this->organisateur;
-    }
-
-    public function setOrganisateur(int $organisateur): self
-    {
-        $this->organisateur = $organisateur;
-
-        return $this;
-    }
-
-    public function getLieuxId(): ?int
-    {
-        return $this->lieux_id;
-    }
-
-    public function setLieuxId(int $lieux_id): self
-    {
-        $this->lieux_id = $lieux_id;
-
-        return $this;
-    }
-
     public function getPhoto(): ?string
     {
         return $this->photo;
@@ -154,6 +150,73 @@ class Sorties
     public function setEtat(int $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Inscriptions[]
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscriptions $inscription): self
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setSortiesId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscriptions $inscription): self
+    {
+        if ($this->inscriptions->contains($inscription)) {
+            $this->inscriptions->removeElement($inscription);
+            // set the owning side to null (unless already changed)
+            if ($inscription->getSortiesId() === $this) {
+                $inscription->setSortiesId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getOrganisateurId(): ?User
+    {
+        return $this->organisateur_id;
+    }
+
+    public function setOrganisateurId(?User $organisateur_id): self
+    {
+        $this->organisateur_id = $organisateur_id;
+
+        return $this;
+    }
+
+    public function getLieuxId(): ?Lieux
+    {
+        return $this->lieux_id;
+    }
+
+    public function setLieuxId(?Lieux $lieux_id): self
+    {
+        $this->lieux_id = $lieux_id;
+
+        return $this;
+    }
+
+    public function getCampusId(): ?Campus
+    {
+        return $this->campus_id;
+    }
+
+    public function setCampusId(?Campus $campus_id): self
+    {
+        $this->campus_id = $campus_id;
 
         return $this;
     }
