@@ -16,6 +16,7 @@ services:
   php-fpm:
     build:
       context: ./php-fpm
+    container_name: php-fpm
     depends_on:
       - database
     environment:
