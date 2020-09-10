@@ -23,7 +23,7 @@
         "symfony/notifier": "*",
         "symfony/orm-pack": "*",
         "symfony/process": "*",
-        "symfony/security-bundle": "*",
+        "symfony/security-bundle": "5.1.*",
         "symfony/serializer-pack": "*",
         "symfony/string": "*",
         "symfony/translation": "*",
