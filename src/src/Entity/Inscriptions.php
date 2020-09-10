@@ -19,42 +19,42 @@ class Inscriptions
 
     /**
      * @ORM\ManyToOne(targetEntity=Sorties::class, inversedBy="inscriptions")
-     * @ORM\JoinColumn(nullable=false)
      */
-    private $sorties_id;
+    private $sorties;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="inscriptions")
-     * @ORM\JoinColumn(nullable=false)
      */
-    private $user_id;
+    private $user;
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSortiesId(): ?Sorties
+    public function getSorties(): ?Sorties
     {
-        return $this->sorties_id;
+        return $this->sorties;
     }
 
-    public function setSortiesId(?Sorties $sorties_id): self
+    public function setSorties(?Sorties $sorties): self
     {
-        $this->sorties_id = $sorties_id;
+        $this->sorties = $sorties;
 
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): self
+    public function setUser(?User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
+
 }

@@ -50,27 +50,29 @@ class Sorties
     private $etat;
 
     /**
-     * @ORM\OneToMany(targetEntity=Inscriptions::class, mappedBy="sorties_id")
+     * @ORM\ManyToOne(targetEntity=Lieux::class, inversedBy="sorties")
+     */
+    private $lieux;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Inscriptions::class, mappedBy="sorties")
      */
     private $inscriptions;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sorties")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $organisateur_id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Lieux::class, inversedBy="sorties")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $lieux_id;
+    private $maxInscriptions;
 
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties")
-     * @ORM\JoinColumn(nullable=false)
      */
-    private $campus_id;
+    private $campus;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sorties")
+     */
+    private $organisateur;
 
     public function __construct()
     {
@@ -154,6 +156,18 @@ class Sorties
         return $this;
     }
 
+    public function getLieux(): ?Lieux
+    {
+        return $this->lieux;
+    }
+
+    public function setLieux(?Lieux $lieux): self
+    {
+        $this->lieux = $lieux;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Inscriptions[]
      */
@@ -166,7 +180,7 @@ class Sorties
     {
         if (!$this->inscriptions->contains($inscription)) {
             $this->inscriptions[] = $inscription;
-            $inscription->setSortiesId($this);
+            $inscription->setSorties($this);
         }
 
         return $this;
@@ -177,46 +191,46 @@ class Sorties
         if ($this->inscriptions->contains($inscription)) {
             $this->inscriptions->removeElement($inscription);
             // set the owning side to null (unless already changed)
-            if ($inscription->getSortiesId() === $this) {
-                $inscription->setSortiesId(null);
+            if ($inscription->getSorties() === $this) {
+                $inscription->setSorties(null);
             }
         }
 
         return $this;
     }
 
-    public function getOrganisateurId(): ?User
+    public function getMaxInscriptions(): ?int
     {
-        return $this->organisateur_id;
+        return $this->maxInscriptions;
     }
 
-    public function setOrganisateurId(?User $organisateur_id): self
+    public function setMaxInscriptions(?int $maxInscriptions): self
     {
-        $this->organisateur_id = $organisateur_id;
+        $this->maxInscriptions = $maxInscriptions;
 
         return $this;
     }
 
-    public function getLieuxId(): ?Lieux
+    public function getCampus(): ?Campus
     {
-        return $this->lieux_id;
+        return $this->campus;
     }
 
-    public function setLieuxId(?Lieux $lieux_id): self
+    public function setCampus(?Campus $campus): self
     {
-        $this->lieux_id = $lieux_id;
+        $this->campus = $campus;
 
         return $this;
     }
 
-    public function getCampusId(): ?Campus
+    public function getOrganisateur(): ?User
     {
-        return $this->campus_id;
+        return $this->organisateur;
     }
 
-    public function setCampusId(?Campus $campus_id): self
+    public function setOrganisateur(?User $organisateur): self
     {
-        $this->campus_id = $campus_id;
+        $this->organisateur = $organisateur;
 
         return $this;
     }

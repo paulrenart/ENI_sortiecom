@@ -64,19 +64,19 @@ class User implements UserInterface
     private $active;
 
     /**
-     * @ORM\OneToMany(targetEntity=Inscriptions::class, mappedBy="user_id")
+     * @ORM\ManyToOne(targetEntity=Campus::class, cascade={"persist"}, inversedBy="users")
      */
-    private $inscriptions;
+    private $campus;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="organisateur_id")
+     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="organisateur")
      */
     private $sorties;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, cascade={"persist"}, inversedBy="users")
+     * @ORM\OneToMany(targetEntity=Inscriptions::class, mappedBy="user")
      */
-    private $campus;
+    private $inscriptions;
 
     public function __construct()
     {
@@ -222,33 +222,14 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Inscriptions[]
-     */
-    public function getInscriptions(): Collection
+    public function getCampus(): ?Campus
     {
-        return $this->inscriptions;
+        return $this->campus;
     }
 
-    public function addInscription(Inscriptions $inscription): self
+    public function setCampus(?Campus $campus): self
     {
-        if (!$this->inscriptions->contains($inscription)) {
-            $this->inscriptions[] = $inscription;
-            $inscription->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInscription(Inscriptions $inscription): self
-    {
-        if ($this->inscriptions->contains($inscription)) {
-            $this->inscriptions->removeElement($inscription);
-            // set the owning side to null (unless already changed)
-            if ($inscription->getUserId() === $this) {
-                $inscription->setUserId(null);
-            }
-        }
+        $this->campus = $campus;
 
         return $this;
     }
@@ -265,7 +246,7 @@ class User implements UserInterface
     {
         if (!$this->sorties->contains($sorty)) {
             $this->sorties[] = $sorty;
-            $sorty->setOrganisateurId($this);
+            $sorty->setOrganisateur($this);
         }
 
         return $this;
@@ -276,22 +257,41 @@ class User implements UserInterface
         if ($this->sorties->contains($sorty)) {
             $this->sorties->removeElement($sorty);
             // set the owning side to null (unless already changed)
-            if ($sorty->getOrganisateurId() === $this) {
-                $sorty->setOrganisateurId(null);
+            if ($sorty->getOrganisateur() === $this) {
+                $sorty->setOrganisateur(null);
             }
         }
 
         return $this;
     }
 
-    public function getCampus(): ?Campus
+    /**
+     * @return Collection|Inscriptions[]
+     */
+    public function getInscriptions(): Collection
     {
-        return $this->campus;
+        return $this->inscriptions;
     }
 
-    public function setCampus(?Campus $campus): self
+    public function addInscription(Inscriptions $inscription): self
     {
-        $this->campus = $campus;
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscriptions $inscription): self
+    {
+        if ($this->inscriptions->contains($inscription)) {
+            $this->inscriptions->removeElement($inscription);
+            // set the owning side to null (unless already changed)
+            if ($inscription->getUser() === $this) {
+                $inscription->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -30,14 +30,14 @@ class Campus
     private $ville;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="campus_id")
-     */
-    private $sorties;
-
-    /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="campus")
      */
     private $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="campus")
+     */
+    private $sorties;
 
     public function __construct()
     {
@@ -76,37 +76,6 @@ class Campus
     }
 
     /**
-     * @return Collection|Sorties[]
-     */
-    public function getSorties(): Collection
-    {
-        return $this->sorties;
-    }
-
-    public function addSorty(Sorties $sorty): self
-    {
-        if (!$this->sorties->contains($sorty)) {
-            $this->sorties[] = $sorty;
-            $sorty->setCampusId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSorty(Sorties $sorty): self
-    {
-        if ($this->sorties->contains($sorty)) {
-            $this->sorties->removeElement($sorty);
-            // set the owning side to null (unless already changed)
-            if ($sorty->getCampusId() === $this) {
-                $sorty->setCampusId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|User[]
      */
     public function getUsers(): Collection
@@ -139,5 +108,36 @@ class Campus
     public function __toString()
     {
         return $this->nom;
+    }
+
+    /**
+     * @return Collection|Sorties[]
+     */
+    public function getSorties(): Collection
+    {
+        return $this->sorties;
+    }
+
+    public function addSorty(Sorties $sorty): self
+    {
+        if (!$this->sorties->contains($sorty)) {
+            $this->sorties[] = $sorty;
+            $sorty->setCampus($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSorty(Sorties $sorty): self
+    {
+        if ($this->sorties->contains($sorty)) {
+            $this->sorties->removeElement($sorty);
+            // set the owning side to null (unless already changed)
+            if ($sorty->getCampus() === $this) {
+                $sorty->setCampus(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -40,7 +40,7 @@ class Lieux
     private $longitude;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="lieux_id")
+     * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="lieux")
      */
     private $sorties;
 
@@ -114,7 +114,7 @@ class Lieux
     {
         if (!$this->sorties->contains($sorty)) {
             $this->sorties[] = $sorty;
-            $sorty->setLieuxId($this);
+            $sorty->setLieux($this);
         }
 
         return $this;
@@ -125,11 +125,12 @@ class Lieux
         if ($this->sorties->contains($sorty)) {
             $this->sorties->removeElement($sorty);
             // set the owning side to null (unless already changed)
-            if ($sorty->getLieuxId() === $this) {
-                $sorty->setLieuxId(null);
+            if ($sorty->getLieux() === $this) {
+                $sorty->setLieux(null);
             }
         }
 
         return $this;
     }
+
 }
