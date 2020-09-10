@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pseudo }}{% endblock %}
+
+{% block body %}
+{{ form_start(profileForm) }}
+        {{ form_row(profileForm.prenom) }}
+        {{ form_row(profileForm.nom) }}
+
+        {{ form_row(profileForm.mail) }}
+
+{{ form_end(profileForm) }}
+{% endblock %}

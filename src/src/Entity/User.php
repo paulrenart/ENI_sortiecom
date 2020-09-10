@@ -59,11 +59,6 @@ class User implements UserInterface
     private $mail;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $campus_id;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $active;
@@ -77,6 +72,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Sorties::class, mappedBy="organisateur_id")
      */
     private $sorties;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, cascade={"persist"}, inversedBy="users")
+     */
+    private $campus;
 
     public function __construct()
     {
@@ -210,18 +210,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCampusId(): ?int
-    {
-        return $this->campus_id;
-    }
-
-    public function setCampusId(?int $campus_id): self
-    {
-        $this->campus_id = $campus_id;
-
-        return $this;
-    }
-
     public function getActive(): ?bool
     {
         return $this->active;
@@ -292,6 +280,18 @@ class User implements UserInterface
                 $sorty->setOrganisateurId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
 
         return $this;
     }
