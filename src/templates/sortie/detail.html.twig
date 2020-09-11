@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SortieController!{% endblock %}
+
+{% block body %}
+
+
+<div>Nom: {{ sortie.nom }}</div>
+<div>Début: {{ sortie.dateDebut|date('Y-m-d H:i') }}</div>
+<div>Fin: {{ sortie.dateFin|date('Y-m-d H:i') }}</div>
+<div>Participants: {{ sortie.inscriptions|length }}/{{ sortie.maxInscriptions}}</div>
+<table>
+    <thead>
+        <tr>
+            <th>Pseudo</th>
+            <th>Nom</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for inscription in sortie.inscriptions %}
+            <tr>
+                <td>{{ inscription.user.pseudo }}</td>
+                <td>{{ inscription.user.prenom }} {{ inscription.user.nom }}</td>
+            </tr>
+        {% endfor %}
+        
+    </tbody>
+</table>
+<div>Etat: {{ sortie.etatLiteral }}</div>
+<div>
+    {% if sortie.id in sorties_utilisateur %}
+        X
+    {% endif %}
+</div>
+<div>Organisateur: {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</div>
+<div><i>{{ sortie.description }}</i></div>
+<div>
+    
+    <h4>{{ sortie.lieux.nom}}</h4>
+    {{ sortie.lieux.adresse}}
+    <div id="mapid" style="width:400px; height:400px"></div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+<script
+    src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin="">
+</script>
+
+<script type="text/javascript">
+    function init(){
+        var mymap = L.map('mapid').setView([{{ sortie.lieux.latitude }}, {{ sortie.lieux.longitude }}], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+            minZoom: 1,
+            maxZoom: 20,
+        }).addTo(mymap);
+        var marker = L.marker([{{ sortie.lieux.latitude }}, {{ sortie.lieux.longitude }}]).addTo(mymap);
+    }
+    window.onload = init();
+</script>
+{% endblock %}

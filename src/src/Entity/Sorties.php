@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sorties
 {
+    private const ETATS = [
+        '1' => "En Cours",
+        '2' => "Terminé",
+    ];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -147,6 +151,11 @@ class Sorties
     public function getEtat(): ?int
     {
         return $this->etat;
+    }
+
+    public function getEtatLiteral(): ?string
+    {
+        return Sorties::ETATS[$this->etat];
     }
 
     public function setEtat(int $etat): self

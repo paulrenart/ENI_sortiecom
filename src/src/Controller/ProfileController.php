@@ -36,8 +36,11 @@ class ProfileController extends AbstractController
             }
             
             $user->setActive(True);
-            $user->setRoles(['ROLE_USER']);
-
+            if ($user->getRoles() == null)
+            {
+                $user->setRoles(['ROLE_USER']);
+            }
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();

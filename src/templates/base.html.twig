@@ -10,7 +10,7 @@
         <nav>
             {% if app.user != null %}
                 {% if 'ROLE_ADMIN' in app.user.roles %}
-                    <li><a href="campus/list">Campus</a></li>
+                    <li><a href="{{ url('campus') }}">Campus</a></li>
                 {% endif %}
                 
                 <li><a href="{{ url('index') }}">Acceuil</a></li>

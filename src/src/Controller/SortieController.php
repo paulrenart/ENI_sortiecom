@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Inscriptions;
 use App\Entity\Sorties;
 use App\Form\SortieFormType;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,14 +66,20 @@ class SortieController extends AbstractController
      */
     public function subscribe($id, Request $request)
     {
-        $inscription = new Inscriptions();
-        $inscription->setUser($this->getUser());
         $repository = $this->getDoctrine()->getManager()->getRepository(Sorties::class);
         $sortie = $repository->findOneBy(array('id' => $id));
-        $inscription->setSorties($sortie);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($inscription);
-        $entityManager->flush();
+        if ($sortie->getDateFin() > new \DateTime('now'))
+        {
+            $inscription = new Inscriptions();
+            $inscription->setUser($this->getUser());
+            $repository = $this->getDoctrine()->getManager()->getRepository(Sorties::class);
+            $sortie = $repository->findOneBy(array('id' => $id));
+            $inscription->setSorties($sortie);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($inscription);
+            $entityManager->flush();
+        }
+        
         return $this->redirectToRoute('index');
     }
     /**
@@ -105,5 +112,23 @@ class SortieController extends AbstractController
         $em->remove($sortie);
         $em->flush();
         return $this->redirectToRoute('index');
+    }
+
+    /**
+     * @Route("/sortie/{id}", name="detail", requirements={"id"="\d+"})
+     */
+    public function detail($id)
+    {
+        $repository = $this->getDoctrine()->getRepository(Sorties::class);
+        $sortie = $repository->find($id);
+        $sorties_utilisateur = [];
+        foreach($this->getUser()->getInscriptions() as $inscription)
+        {
+            $sorties_utilisateur[] = $inscription->getSorties()->getId();
+        }
+        return $this->render("sortie/detail.html.twig", [
+            "sortie" => $sortie,
+            'sorties_utilisateur' => $sorties_utilisateur,
+        ]);
     }
 }

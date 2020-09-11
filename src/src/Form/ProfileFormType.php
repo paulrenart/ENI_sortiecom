@@ -35,6 +35,7 @@ class ProfileFormType extends AbstractType
                     ]),
                 ],
                 'required' => false,
+                'label' => "Mot de passe",
             ])
             ->add('telephone', TextType::class, ['required' => false,])
             ->add('mail', TextType::class, ['required' => false,])
