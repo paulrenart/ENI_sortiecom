@@ -17,10 +17,15 @@ class IndexController extends AbstractController
         $sorties = $this->getDoctrine()
             ->getRepository(Sorties::class)
             ->findAll();
-        dump($sorties);
+        $sorties_utilisateur = [];
+        foreach($this->getUser()->getInscriptions() as $inscription)
+        {
+            $sorties_utilisateur[] = $inscription->getSorties()->getId();
+        }
+        
         return $this->render('index/index.html.twig', [
             'sorties' => $sorties,
-
+            'sorties_utilisateur' => $sorties_utilisateur,
         ]);
     }
 }

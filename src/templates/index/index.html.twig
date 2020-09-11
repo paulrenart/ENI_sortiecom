@@ -17,14 +17,20 @@
         </tr>
     </thead>
     <tbody>
+        {% set etats = {'1': "En cours", '2': "Terminée"} %}
         {% for sortie in sorties %}
             <tr>
                 <td>{{ sortie.nom }}</td>
                 <td>{{ sortie.dateDebut|date('Y-m-d H:i') }}</td>
                 <td>{{ sortie.dateFin|date('Y-m-d H:i') }}</td>
                 <td>{{ sortie.inscriptions|length }}/{{ sortie.maxInscriptions}}</td>
-                <td>{{ sortie.etat }}</td>
-                <td></td>
+                <td>{{ etats[sortie.etat] }}</td>
+                <td>
+                    {% if sortie.id in sorties_utilisateur %}
+                     X
+                    {% endif %}
+                
+                </td>
                 <td>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</td>
             </tr>
         {% endfor %}
