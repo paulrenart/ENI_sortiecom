@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des campus{% endblock %}
+
+{% block body %}
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Ville</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for camp in campus %}
+            <tr>
+                <td>{{ camp.nom }}</td>
+                <td>{{ camp.ville }}</td>
+                <td>
+                    <a href="campus/detail/{{ camp.id }}">Modifier</a>
+                     - 
+                    <a href="campus/delete/{{ camp.id }}">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
+            <tr>
+            {{ form_start(campusForm) }}
+                <td>{{ form_row(campusForm.nom) }}</td>
+                <td>{{ form_row(campusForm.ville) }}</td>
+                <td>{{ form_row(campusForm.send) }}</td>
+            {{ form_end(campusForm) }}
+            </tr>
+        
+    </tbody>
+</table>
+{% endblock %}
+

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des campus{% endblock %}
+
+{% block body %}
+{{ form_start(campusForm) }}
+    <p>Nom: {{ form_row(campusForm.nom) }}</p>
+    <p>Ville: {{ form_row(campusForm.ville) }}</p>
+    <p>{{ form_row(campusForm.send) }}</p>
+{{ form_end(campusForm) }}
+{% endblock %}
+
