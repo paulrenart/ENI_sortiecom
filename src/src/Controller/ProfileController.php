@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\ProfileFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,6 +53,20 @@ class ProfileController extends AbstractController
         return $this->render('profile/index.html.twig', [
             'profileForm' => $form->createView(),
             'pseudo' => $user->getPseudo(),
+        ]);
+    }
+
+    /**
+     * @Route("/profile/{id}", name="profile_detail", requirements={"id"="\d+"})
+     */
+    public function profile_detail($id, Request $request) : Response
+    {
+
+        $repository = $this->getDoctrine()->getManager()->getRepository(User::class);
+        $user = $repository->findOneBy(array('id' => $id));
+
+        return $this->render('profile/detail.html.twig', [
+            'user' => $user,
         ]);
     }
 }
