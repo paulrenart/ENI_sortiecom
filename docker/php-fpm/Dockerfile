@@ -12,6 +12,10 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-CMD composer install ; wait-for-it database:3306 -- bin/console doctrine:migrations:migrate ;  php-fpm 
+COPY ./cronjobs /etc/cron.d/scheduler
+
+COPY ./entrypoint.sh /
+
+ENTRYPOINT /entrypoint.sh
 
 EXPOSE 9000
