@@ -20,25 +20,25 @@ class SortieFormType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class)
-            ->add('date_debut', DateType::class)
-            ->add('date_fin', DateType::class)
+            ->add('date_debut', DateType::class, ['data' => new \DateTime('now')])
+            ->add('date_fin', DateType::class, ['data' => new \DateTime('now +1 month')])
             ->add('description', TextType::class)
             ->add('photo', TextType::class, ['required' => false,])
             ->add('maxInscriptions', IntegerType::class)
             ->add(
                 'lieux',
-                EntityType::class, [
+                EntityType::class,
+                [
                     'class' => Lieux::class,
                     'choice_label' => 'nom',
-                    ]
-                )
+                ])
             ->add(
                 'campus',
-                EntityType::class, [
+                EntityType::class,
+                [
                     'class' => Campus::class,
                     'choice_label' => 'nom',
-                    ]
-                )
+                ])
             ->add('send', SubmitType::class, [
                     'label' => 'Enregistrer',
                 ])

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Inscriptions;
 use App\Entity\Sorties;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -47,4 +48,32 @@ class SortiesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findFilteredSorties($filters)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('s')
+            ->from('Sorties', 's');
+        if ($filters->get('campus') != null)
+        {
+
+        }
+    }
+
+    // select * from sorties where sorties.id in (select sorties_id from inscriptions left join user on user.id = inscriptions.user_id where user_id = 3)
+    public function findUserSorties($user)
+    {
+        $sub = $this->getEntityManager()->createQueryBuilder()
+            ->select('i.id')
+            ->from('App:Inscriptions', 'i')
+            ->where('i.user = ?1')
+            ->getDQL();
+        $qb = $this->getEntityManager()->createQueryBuilder('s')
+            ->select('s')
+            ->from('App:Sorties', 's')
+            ->andWhere($this->getEntityManager()->createQueryBuilder()->expr()->in('s.id',$sub))
+            ->setParameter(1, $user->getId());
+        return $qb->getQuery()->getResult();
+    
+    }
 }

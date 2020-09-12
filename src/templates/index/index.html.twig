@@ -3,6 +3,8 @@
 {% block title %}Hello IndexController!{% endblock %}
 
 {% block body %}
+{{ form(search_form) }}
+{{ dump(dumped) }}
 <table>
     <thead>
         <tr>
@@ -25,14 +27,18 @@
                 <td>{{ sortie.inscriptions|length }}/{{ sortie.maxInscriptions}}</td>
                 <td>{{ sortie.etatLiteral }}</td>
                 <td>
-                    {% if sortie.id in sorties_utilisateur %}
+                    {% if sortie in user_sorties %}
                      X
                     {% endif %}
                 </td>
-                <td><a href='/profile/{{ sortie.organisateur.id }}'>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                {% if sortie.organisateur.prenom != null and sortie.organisateur.nom!= null %}
+                    <td><a href='/profile/{{ sortie.organisateur.id }}'>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                {% else %}
+                    <td><a href='/profile/{{ sortie.organisateur.id }}'>{{ sortie.organisateur.pseudo }}</a></td>
+                {% endif %}
                 <td>
                     <a href="sortie/{{ sortie.id }}">Afficher</a>
-                    {% if sortie.id in sorties_utilisateur %}
+                    {% if sortie in user_sorties %}
                      - 
                     <a href="sortie/unsubscribe/{{ sortie.id }}">Se désister</a>
                     {% elseif sortie.inscriptions|length < sortie.maxInscriptions and sortie.dateFin > date() %}
