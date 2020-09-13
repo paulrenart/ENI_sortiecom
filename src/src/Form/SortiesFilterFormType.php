@@ -39,16 +39,12 @@ class SortiesFilterFormType extends AbstractType
                 [
                     'label' => 'Entre',
                     'required' => false,
-                    'data' => new \DateTime('now'),
-                    'required' => false,
                 ])
             ->add(
                 'date_fin',
                 DateType::class,
                 [
                     'label' => 'et',
-                    'required' => false,
-                    'data' => new \DateTime('now +1 month'),
                     'required' => false,
                 ])
             ->add(

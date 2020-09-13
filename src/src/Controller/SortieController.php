@@ -68,6 +68,7 @@ class SortieController extends AbstractController
     {
         $repository = $this->getDoctrine()->getManager()->getRepository(Sorties::class);
         $sortie = $repository->findOneBy(array('id' => $id));
+        
         if ($sortie->getDateFin() > new \DateTime('now'))
         {
             $inscription = new Inscriptions();
