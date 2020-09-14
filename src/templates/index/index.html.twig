@@ -3,9 +3,140 @@
 {% block title %}Hello IndexController!{% endblock %}
 
 {% block body %}
-{{ form(search_form) }}
-<table>
-    <thead>
+<style>
+table {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    height: 400px;
+}
+
+thead {
+    flex: 0 0 auto;
+}
+
+tbody {
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+tr {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+.form-group {
+   margin-bottom: 1px!important;
+}
+
+</style>
+<div class="row">
+    <div class="col-4 ml-auto d-none d-lg-block">
+        <div class="row">
+            <h5>Participant: {{ app.user.prenom }} {{ app.user.nom|first }}.</h5>
+        </div>
+        <div class="row">
+            <h5>Date du jour: {{ "now"|date("d/m/Y") }}</h5>
+        </div>
+    </div>
+</div>
+<div class="row d-none d-lg-block">
+    <h5>filtrer les sorties</h5>
+</div>
+<div class="row d-none d-lg-block">
+    <form>
+        {{ form_start(search_form) }}
+        <div class="form-group row">
+
+            <div class="col-4">
+                
+                <div class="form-group row">
+                    {{ form_errors(search_form.campus) }}
+                    <div class="col-6">
+                    {{ form_label(search_form.campus) }}
+                    </div>
+                    <div class="col-6">
+                    {{ form_widget(search_form.campus) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_errors(search_form.nom) }}
+                    <div class="col-6">
+                    {{ form_label(search_form.nom) }}
+                    </div>
+                    <div class="col-6">
+                    {{ form_widget(search_form.nom) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_errors(search_form.date_debut) }}
+                    <div class="col-6">
+                    {{ form_label(search_form.date_debut) }}
+                    </div>
+                    <div class="col-6">
+                    {{ form_widget(search_form.date_debut) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_errors(search_form.date_fin) }}
+                    <div class="col-6">
+                    {{ form_label(search_form.date_fin) }}
+                    </div>
+                    <div class="col-6">
+                    {{ form_widget(search_form.date_fin) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 mr-auto">
+                <div class="form-group row">
+                    {{ form_errors(search_form.owned) }}
+                    <div class="col-6">
+                    {{ form_label(search_form.owned) }}
+                    </div>
+                    <div class="col-6">
+                    {{ form_widget(search_form.owned) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_errors(search_form.subscribed) }}
+                    <div class="col-6">
+                    {{ form_label(search_form.subscribed) }}
+                    </div>
+                    <div class="col-6">
+                    {{ form_widget(search_form.subscribed) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_errors(search_form.notSubscribed) }}
+                    <div class="col-6">
+                    {{ form_label(search_form.notSubscribed) }}
+                    </div>
+                    <div class="col-6">
+                    {{ form_widget(search_form.notSubscribed) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form_errors(search_form.expired) }}
+                    <div class="col-6">
+                    {{ form_label(search_form.expired) }}
+                    </div>
+                    <div class="col-6">
+                    {{ form_widget(search_form.expired) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 align-self-center">
+                {{ form_row(search_form.send, {'attr' : { 'class' : 'btn btn-lg btn-primary btn-block' }}) }}
+            </div>
+        </div>
+    {{ form_end(search_form) }}
+    </form>
+</div>
+<div class="row">
+<table class="table table-striped header-fixed">
+    <thead class="thead-dark">
         <tr>
             <th>Nom de la sortie</th>
             <th>Date de la sortie</th>
@@ -56,6 +187,8 @@
         
     </tbody>
 </table>
-
-<button onclick="location.href='sortie/create'" type="button">Créer une sortie</button>
+</div>
+<div class="row">
+    <button class="btn btn-lg btn-primary" onclick="location.href='sortie/create'" type="button">Créer une sortie</button>
+</div>
 {% endblock %}
