@@ -3,6 +3,7 @@
 {% block title %}{{ user.pseudo }}{% endblock %}
 
 {% block body %}
+<div><img src="{{ asset(images_directory ~ user.photo) }}" height="200"></div>
 <div>{{ user.pseudo }}</div>
 <div>{{ user.prenom }} {{ user.nom }}</div>
 <div>{{ user.mail }}</div>

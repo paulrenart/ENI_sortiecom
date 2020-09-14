@@ -69,7 +69,8 @@ class SortieController extends AbstractController
         $repository = $this->getDoctrine()->getManager()->getRepository(Sorties::class);
         $sortie = $repository->findOneBy(array('id' => $id));
         
-        if ($sortie->getDateFin() > new \DateTime('now'))
+        if ($sortie->getDateFin() > new \DateTime('now')
+            && !in_array($sortie, $repository->findUserSorties($this->getUser())))
         {
             $inscription = new Inscriptions();
             $inscription->setUser($this->getUser());
@@ -92,14 +93,18 @@ class SortieController extends AbstractController
         $sortie = $sortie_repository->findOneBy(array(
             'id' => $id,
         ));
-        $inscription_repository = $this->getDoctrine()->getManager()->getRepository(Inscriptions::class);
-        $inscription = $inscription_repository->findOneBy(array(
-            'sorties' => $sortie,
-            'user' => $this->getUser()
-        ));
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($inscription);
-        $em->flush();
+        if (in_array($sortie, $sortie_repository->findUserSorties($this->getUser())))
+        {
+            $inscription_repository = $this->getDoctrine()->getManager()->getRepository(Inscriptions::class);
+            $inscription = $inscription_repository->findOneBy(array(
+                'sorties' => $sortie,
+                'user' => $this->getUser()
+            ));
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($inscription);
+            $em->flush();
+        }
+        
         return $this->redirectToRoute('index');
     }
     /**

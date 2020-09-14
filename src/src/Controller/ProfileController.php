@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ProfileFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +35,26 @@ class ProfileController extends AbstractController
                         $form->get('plainPassword')->getData()
                     )
                 );
+            }
+            $imageFile = $form->get('photo')->getData();
+
+            if ($imageFile) {
+                if ($user->getPhoto())
+                {
+                    $filesystem = new Filesystem();
+                    $filesystem->remove($this->getParameter('images_directory').$user->getPhoto());
+                }
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                $imageFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+
+                $user->setPhoto($newFilename);
             }
             
             $user->setActive(True);

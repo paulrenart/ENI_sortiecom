@@ -3,6 +3,9 @@
 {% block title %}{{ pseudo }}{% endblock %}
 
 {% block body %}
+{% if app.user.photo != null %}
+<div><img src="{{ asset(images_directory ~ app.user.photo) }}" height="200"></div>
+{% endif %}
 {{ form_start(profileForm) }}
         {{ form_row(profileForm.prenom) }}
         {{ form_row(profileForm.nom) }}
