@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LieuxController!{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    <div>{{ form_row(form.nom) }}</div>
+    <div>{{ form_row(form.adresse) }}</div>
+    <div style="display: none;">{{ form_row(form.longitude) }}</div>
+    <div style="display: none;">{{ form_row(form.latitude) }}</div>
+{{ form_end(form) }}
+<div id="mapid" style="width:400px; height:400px"></div>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+<script
+    src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin="">
+</script>
+<script>
+$(document).ready(function(){
+    const source = document.getElementById('lieux_form_adresse');
+
+    const inputHandler = async function(e) {
+        console.log(e.target.value);
+        const response = await fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURI(e.target.value), {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        });
+        const myJson = await response.json();
+        
+        closeAllLists();
+        var a, b;
+        if (!this.value) { return false;}
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        this.parentNode.appendChild(a);
+        for (var key in myJson.features) {
+            var label = myJson.features[key].properties.label;
+            var longitude = myJson.features[key].geometry.coordinates[0];
+            var latitude = myJson.features[key].geometry.coordinates[1];
+            console.log(label);
+            console.log(longitude);
+
+            b = document.createElement("DIV");
+            b.innerHTML = "<strong>" + label.substr(0, this.value.length) + "</strong>";
+            b.innerHTML += label.substr(this.value.length);
+            b.innerHTML += "<input type='hidden' value='" + label + "|" + longitude + "|" + latitude + "'>";
+            
+            b.addEventListener("click", function(e) {
+                var data = this.getElementsByTagName("input")[0].value.split("|");
+                source.value = data[0];
+                document.getElementById('lieux_form_longitude').value = data[1];
+                document.getElementById('lieux_form_latitude').value = data[2];
+                closeAllLists();
+                show_map();
+            });
+
+            a.appendChild(b);
+        }
+        function closeAllLists() {
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                x[i].parentNode.removeChild(x[i]);
+            }
+        }
+    }
+    source.addEventListener('input', inputHandler);
+    source.addEventListener('propertychange', inputHandler);
+    function show_map(){
+        var mymap = L.map('mapid').setView([
+            document.getElementById('lieux_form_latitude').value,
+            document.getElementById('lieux_form_longitude').value
+            ], 15
+        );
+        L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+            minZoom: 1,
+            maxZoom: 20,
+        }).addTo(mymap);
+        var marker = L.marker([
+            document.getElementById('lieux_form_latitude').value,
+            document.getElementById('lieux_form_longitude').value
+        ]).addTo(mymap);
+    }
+
+}); 
+</script>
+
+{% endblock %}
