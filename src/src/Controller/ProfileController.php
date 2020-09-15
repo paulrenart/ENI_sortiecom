@@ -42,7 +42,7 @@ class ProfileController extends AbstractController
                 if ($user->getPhoto())
                 {
                     $filesystem = new Filesystem();
-                    $filesystem->remove($this->getParameter('images_directory').$user->getPhoto());
+                    $filesystem->remove($this->getParameter('images_directory').'/'.$user->getPhoto());
                 }
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL

@@ -1,0 +1,2 @@
+"pseudo";"nom";"prenom";"password";"photo";"telephone";"mail";"campus";"roles";"active"
+"entree_fichier";"Fichier";"Entree";"testtest";"";"0124252526";"fichier@sortie.com";"2";"ROLE_USER,ROLE_FILE";"1"

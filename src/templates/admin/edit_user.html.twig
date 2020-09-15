@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% if not form.pseudo.vars.value %}
+<form action="../upload" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="user_file">Fichier utilisateur:</label>
+        <input type="file" name="user_file" id="user_file">
+    </div>
+    <button type="submit">Envoyer</button>
+</form>
+<hr>
+{% endif %}
+{{ form_start(form) }}
+    <div>{{ form_row(form.pseudo) }}</div>
+    <div>{{ form_row(form.prenom) }}</div>
+    <div>{{ form_row(form.nom) }}</div>
+    <div>{{ form_row(form.plainPassword) }}</div>
+    <div>{{ form_row(form.photo) }}</div>
+    <div>{{ form_row(form.telephone) }}</div>
+    <div>{{ form_row(form.mail) }}</div>
+    <div>{{ form_row(form.campus) }}</div>
+    <div>
+        {{ form_label(form.roles) }}
+        <ul id="roles-fields-list"
+            data-prototype="{{ form_widget(form.roles.vars.prototype)|e }}"
+            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-counter="{{ form.roles|length }}"
+            style="list-style-type: none;">
+        {% for role in form.roles %}
+            <li>
+                {{ form_errors(role) }}
+                {{ form_widget(role) }}
+            </li>
+        {% endfor %}
+        <button type="button"
+            class="btn btn-primary add-another-collection-widget"
+            data-list-selector="#roles-fields-list">Ajouter un role</button>
+    </div>
+    <div>{{ form_row(form.active) }}</div>
+    <div>{{ form_row(form.send) }}</div>
+{{ form_end(form) }}
+
+<script>
+jQuery(document).ready(function () {
+    jQuery('.add-another-collection-widget').click(function (e) {
+        var list = jQuery(jQuery(this).attr('data-list-selector'));
+        // Try to find the counter of the list or use the length of the list
+        var counter = list.data('widget-counter') || list.children().length;
+
+        // grab the prototype template
+        var newWidget = list.attr('data-prototype');
+        // replace the "__name__" used in the id and name of the prototype
+        // with a number that's unique to your emails
+        // end name attribute looks like name="contact[emails][2]"
+        newWidget = newWidget.replace(/__name__/g, counter);
+        // Increase the counter
+        counter++;
+        // And store it, the length cannot be used if deleting widgets is allowed
+        list.data('widget-counter', counter);
+
+        // create a new list element and add it to the list
+        var newElem = jQuery(list.attr('data-widget-tags')).html(newWidget);
+        newElem.appendTo(list);
+    });
+});
+</script>
+{% endblock %}

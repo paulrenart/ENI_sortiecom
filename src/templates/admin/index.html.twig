@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des campus{% endblock %}
+
+{% block body %}
+<table class="table table-striped header-fixed">
+    <thead>
+        <tr>
+            <th>Pseudo</th>
+            <th>Prenom</th>
+            <th>Nom</th>
+            <th>Mail</th>
+            <th>Téléphone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.pseudo }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.mail }}</td>
+                <td>{{ user.telephone }}</td>
+                <td>
+                    <a href='/profile/{{ user.id }}'>Afficher</a>
+                    -
+                    <a href="admin/user/{{ user.id }}">Modifier</a>
+                     - 
+                    <a href="admin/user/delete/{{ user.id }}">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button class="btn btn-lg btn-primary" onclick="location.href='admin/user/create'" type="button">Ajouter un utilisateur</button>
+{% endblock %}
+
