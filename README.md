@@ -1,2 +1,2 @@
 # ENI_sortiecom
-School projet - Group activities manager
+School projet Symfony - Group activities manager
